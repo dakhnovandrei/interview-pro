@@ -1,0 +1,15 @@
+.env
+.venv
+venv
+__pycache__
+*.pyc
+.pytest_cache
+pytest-cache-files-*
+.coverage
+htmlcov
+.git
+.idea
+*.log
+dist
+build
+s -ExecutionPolicy*

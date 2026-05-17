@@ -1,0 +1,35 @@
+# Core Framework
+fastapi
+uvicorn[standard]
+
+# Database
+sqlalchemy
+psycopg2-binary
+
+# Authentication & Security
+python-jose[cryptography]
+passlib[bcrypt]
+PyJWT
+cryptography
+bcrypt==4.1.3
+
+# Data Validation
+pydantic
+email-validator
+
+# Environment Variables
+python-dotenv
+
+
+# HTTP Requests
+httpx
+requests
+
+# Development
+python-multipart
+pytest
+pytest-cov
+
+# MinIO Storage
+minio
+boto3
