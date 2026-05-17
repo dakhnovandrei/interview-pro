@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Interview Pro</title>
+  <desc id="desc">Interview practice platform preview image</desc>
+  <rect width="1200" height="630" fill="#f8fafc"/>
+  <rect x="80" y="80" width="1040" height="470" rx="28" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <circle cx="188" cy="178" r="54" fill="#4f46e5"/>
+  <path d="M188 132a46 46 0 1 0 0 92 46 46 0 0 0 0-92zm0 28 11 24 26 3-19 18 5 26-23-13-23 13 5-26-19-18 26-3 11-24z" fill="#ffffff"/>
+  <text x="280" y="185" font-family="Inter, Arial, sans-serif" font-size="62" font-weight="700" fill="#111827">Interview Pro</text>
+  <text x="280" y="250" font-family="Inter, Arial, sans-serif" font-size="30" fill="#475569">AI interview templates and practice sessions</text>
+  <rect x="150" y="340" width="255" height="86" rx="14" fill="#eef2ff"/>
+  <text x="180" y="392" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700" fill="#3730a3">Technical</text>
+  <rect x="470" y="340" width="255" height="86" rx="14" fill="#ecfdf5"/>
+  <text x="500" y="392" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700" fill="#047857">Behavioral</text>
+  <rect x="790" y="340" width="255" height="86" rx="14" fill="#fff7ed"/>
+  <text x="820" y="392" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700" fill="#c2410c">Systems design</text>
+</svg>

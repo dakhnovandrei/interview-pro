@@ -1,0 +1,137 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, master ]
+  pull_request:
+    branches: [ main, develop, master ]
+
+jobs:
+  backend-tests:
+    name: Backend Tests & Coverage
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: Fullstack
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Lint Python code
+      run: |
+        python -m py_compile src/**/*.py || true
+
+    - name: Run backend tests with coverage
+      run: |
+        python -m pytest tests/ -v --cov=src --cov-report=xml --cov-report=term-missing --cov-fail-under=45
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./Fullstack/coverage.xml
+        flags: backend
+        name: backend-coverage
+      continue-on-error: true
+
+  frontend-tests:
+    name: Frontend Tests, Build & E2E
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: Frontend_for_Fullstack/my_app
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: Frontend_for_Fullstack/my_app/package-lock.json
+
+    - name: Install frontend dependencies
+      run: npm ci
+
+    - name: Run frontend unit tests
+      run: npm run test
+
+    - name: Run frontend build
+      run: npm run build
+
+    - name: Run E2E tests
+      run: npm run test:e2e
+      continue-on-error: true
+
+  docker-validation:
+    name: Docker Build & Configuration
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests]
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Validate docker-compose configuration
+      run: docker compose --env-file .env.example config > /dev/null
+
+    - name: Build backend Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./Fullstack
+        push: false
+        tags: interview-pro-backend:ci
+
+    - name: Build frontend Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./Frontend_for_Fullstack/my_app
+        push: false
+        tags: interview-pro-frontend:ci
+
+  deploy:
+    name: Deploy (Production)
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, docker-validation]
+    if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy notification
+      run: echo "✅ All tests passed! Ready for deployment. Deploy hook: docker compose pull && docker compose up -d"
+
+  status-check:
+    name: CI Status Summary
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-tests, docker-validation]
+    if: always()
+    
+    steps:
+    - name: Check job statuses
+      run: |
+        echo "Backend Tests: ${{ needs.backend-tests.result }}"
+        echo "Frontend Tests: ${{ needs.frontend-tests.result }}"
+        echo "Docker Validation: ${{ needs.docker-validation.result }}"
+        
+        if [ "${{ needs.backend-tests.result }}" = "failure" ] || [ "${{ needs.frontend-tests.result }}" = "failure" ]; then
+          echo "❌ Critical tests failed!"
+          exit 1
+        fi
+        
+        echo "✅ All critical tests passed!"

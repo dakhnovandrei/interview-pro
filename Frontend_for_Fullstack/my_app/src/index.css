@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Базовые стили для html и body, чтобы чат был на весь экран */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background-color: #f3f4f6; /* Светло-серый фон по умолчанию */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
