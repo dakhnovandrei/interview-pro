@@ -114,8 +114,9 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Deploy notification
-      run: echo 'All tests passed! Ready for deployment. Deploy hook: docker compose pull and docker compose up'
-
+      run: |
+        echo "All tests passed! Ready for deployment."
+        echo "Deploy hook: docker compose pull && docker compose up -d"
   status-check:
     name: CI Status Summary
     runs-on: ubuntu-latest
